@@ -13,20 +13,21 @@
   },
   "homepage": "https://github.com/rayk47/sandbox-prisma-adapter-aurora#readme",
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build-prisma-client && tsc",
     "lint": "eslint",
-    "build-prisma-client": "npx prisma generate --schema=./src/lib/handlers/prisma/schema.prisma",
-    "build-prisma-migrations": "npx prisma migrate dev --schema=./src/lib/handlers/prisma/schema.prisma",
-    "deploy": "npm run build && npx aws-cdk deploy --all --require-approval never",
-    "deploy-lambdas": "npm run build && npx aws-cdk deploy PrismaDataAPIlambdas --force",
-    "destroy": "npx aws-cdk destroy prisma-rds-data-api* --force",
-    "bootstrap": "npx aws-cdk bootstrap"
+    "build-prisma-client": "prisma generate --schema=./src/lib/handlers/prisma/schema.prisma",
+    "build-prisma-migrations": "prisma migrate dev --schema=./src/lib/handlers/prisma/schema.prisma",
+    "deploy": "npm run build && cdk deploy --all --require-approval never",
+    "deploy-lambdas": "npm run build && cdk deploy PrismaDataAPIlambdas --force",
+    "destroy": "cdk destroy prisma-rds-data-api* --force",
+    "bootstrap": "cdk bootstrap"
   },
   "bin": {
     "aws-lambda": "bin/main.js"
   },
   "dependencies": {
     "@aws-sdk/client-rds-data": "^3.600.0",
+    "@prisma/client": "^5.19.1",
     "@raymondjkelly/aurora-prisma-adapter": "1.0.2",
     "aws-cdk-lib": "2.147.0",
     "constructs": "^10.0.0",
@@ -36,9 +37,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",
+    "@types/lodash": "^4.17.7",
     "@types/node": "^22.5.4",
+    "aws-cdk": "^2.158.0",
     "eslint": "^9.10.0",
     "globals": "^15.9.0",
+    "prisma": "^5.19.1",
     "typescript-eslint": "^8.5.0"
   }
 }

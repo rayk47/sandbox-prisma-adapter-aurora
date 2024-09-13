@@ -22,11 +22,8 @@ jobs:
           node-version: "20.x"
           cache: "npm"
 
-      - name: Install CDK Globally
-        run: npm install -g aws-cdk
-
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Lint
         run: npm run lint
