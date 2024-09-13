@@ -20,5 +20,9 @@
     "lib": [
       "es2022"
     ]
-  }
+  },
+  "exclude": [
+    "src/lib/handlers/prisma",
+    "cdk.out"
+  ]
 }

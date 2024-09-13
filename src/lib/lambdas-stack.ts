@@ -48,7 +48,8 @@ export class Lambdas extends Stack {
                 minify: false
             },
             runtime: Runtime.NODEJS_20_X,
-            projectRoot: path.join(ROOT_OF_PROJECT, '..',),
+            timeout: Duration.seconds(10),
+            projectRoot: ROOT_OF_PROJECT,
             architecture: Architecture.X86_64,
             depsLockFilePath: path.join(ROOT_OF_PROJECT, 'package-lock.json'),
             environment: {
@@ -76,7 +77,7 @@ export class Lambdas extends Stack {
                 minify: false
             },
             runtime: Runtime.NODEJS_20_X,
-            projectRoot: path.join(ROOT_OF_PROJECT, '..',),
+            projectRoot: ROOT_OF_PROJECT,
             architecture: Architecture.X86_64,
             depsLockFilePath: path.join(ROOT_OF_PROJECT, 'package-lock.json'),
             layers: [prismaBinaryLayer],
