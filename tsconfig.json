@@ -1,38 +1,24 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "outDir": "dist",
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "rootDir": ".",
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "lib": [
-      "es2020",
-      "dom"
-    ],
+    /* Base Options: */
+    "esModuleInterop": true,
     "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
-    "baseUrl": ".",
-  },
-  "files": [],
-  "include": [],
-  "exclude": [
-    "node_modules",
-    "tmp",
-    "src/lib/handlers/prisma"
-  ],
-  "references": [
-    {
-      "path": "./tsconfig.lib.json"
-    }
-  ]
+    "target": "es2022",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "moduleDetection": "force",
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false,
+    /* Strictness */
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    /* NOT transpiling with TypeScript: */
+    "module": "commonjs",
+    "noEmit": true,
+    /* Doesn't run in the DOM: */
+    "lib": [
+      "es2022"
+    ]
+  }
 }

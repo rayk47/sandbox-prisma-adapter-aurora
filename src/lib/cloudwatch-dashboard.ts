@@ -1,4 +1,4 @@
-import { Duration, RemovalPolicy, Stack, StackProps } from "aws-cdk-lib";
+import { Duration, RemovalPolicy, Stack, type StackProps } from "aws-cdk-lib";
 import { Construct } from "constructs";
 import { DatabaseCluster } from "aws-cdk-lib/aws-rds";
 import { Dashboard, GraphWidget } from "aws-cdk-lib/aws-cloudwatch";

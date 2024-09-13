@@ -1,6 +1,6 @@
 import {
     Stack,
-    StackProps,
+    type StackProps,
     RemovalPolicy,
     Duration,
 } from 'aws-cdk-lib';

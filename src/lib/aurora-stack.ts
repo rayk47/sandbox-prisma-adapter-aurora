@@ -1,6 +1,6 @@
 import {
   Stack,
-  StackProps,
+  type StackProps,
   CfnOutput,
   RemovalPolicy,
 } from 'aws-cdk-lib';

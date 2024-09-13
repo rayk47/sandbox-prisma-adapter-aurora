@@ -1,4 +1,4 @@
-import { RDSDataClient, BeginTransactionCommand, CommitTransactionCommand, CommitTransactionCommandInput, BeginTransactionCommandInput, ExecuteStatementCommand, ExecuteStatementCommandInput, SqlParameter } from '@aws-sdk/client-rds-data';
+import { RDSDataClient, BeginTransactionCommand, CommitTransactionCommand, type CommitTransactionCommandInput, type BeginTransactionCommandInput, ExecuteStatementCommand, type ExecuteStatementCommandInput, type SqlParameter } from '@aws-sdk/client-rds-data';
 import { randomUUID } from 'crypto';
 import { env } from 'process';
 
