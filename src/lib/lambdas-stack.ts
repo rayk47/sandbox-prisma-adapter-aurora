@@ -36,7 +36,9 @@ export class Lambdas extends Stack {
 
         const prismaBinaryLayer = this.createPrismaBinaryLayer();
         this.createSetupDatabaseLambda(cluster, dbName);
-        this.createUseAdapterLambda(cluster, dbName, prismaBinaryLayer);
+        this.createUserLambda(cluster, dbName, prismaBinaryLayer);
+        this.getAllUsersLambda(cluster, dbName, prismaBinaryLayer);
+        this.createUpdateGetTransactionLambda(cluster, dbName, prismaBinaryLayer);
     }
 
     createSetupDatabaseLambda = (cluster: DatabaseCluster, dbName: string) => {
@@ -67,11 +69,11 @@ export class Lambdas extends Stack {
         return setupDatabaseLambda;
     }
 
-    createUseAdapterLambda = (cluster: DatabaseCluster, dbName: string, prismaBinaryLayer: LayerVersion) => {
-        const useAdapterLambda = new NodejsFunction(this, this.envName + 'UseAdapterLambda', {
-            description: 'Test using the prisma adapter',
-            entry: path.join(__dirname, 'handlers', 'test-adapter.ts'),
-            handler: 'testAdapter',
+    createUserLambda = (cluster: DatabaseCluster, dbName: string, prismaBinaryLayer: LayerVersion) => {
+        const createUser = new NodejsFunction(this, this.envName + 'CreateUser', {
+            description: 'Create a user using the Prisma Aurora Adapter',
+            entry: path.join(__dirname, 'handlers', 'create-user.ts'),
+            handler: 'createUser',
             timeout: Duration.seconds(10),
             bundling: {
                 minify: false
@@ -91,10 +93,70 @@ export class Lambdas extends Stack {
             }
         });
 
-        useAdapterLambda.applyRemovalPolicy(RemovalPolicy.DESTROY);
+        createUser.applyRemovalPolicy(RemovalPolicy.DESTROY);
 
-        cluster.grantDataApiAccess(useAdapterLambda);
-        cluster.secret?.grantRead(useAdapterLambda);
+        cluster.grantDataApiAccess(createUser);
+        cluster.secret?.grantRead(createUser);
+    }
+
+    getAllUsersLambda = (cluster: DatabaseCluster, dbName: string, prismaBinaryLayer: LayerVersion) => {
+        const getAllUsers = new NodejsFunction(this, this.envName + 'GetAllUsers', {
+            description: 'Get all users using the Prisma Aurora Adapter',
+            entry: path.join(__dirname, 'handlers', 'get-all-users.ts'),
+            handler: 'getAllUsers',
+            timeout: Duration.seconds(10),
+            bundling: {
+                minify: false
+            },
+            runtime: Runtime.NODEJS_20_X,
+            projectRoot: ROOT_OF_PROJECT,
+            architecture: Architecture.X86_64,
+            depsLockFilePath: path.join(ROOT_OF_PROJECT, 'package-lock.json'),
+            layers: [prismaBinaryLayer],
+            environment: {
+                DEBUG: "prisma*",
+                RESOURCE_ARN: cluster.clusterArn,
+                SECRET_ARN: cluster.secret!.secretArn,
+                DATABASE_NAME: dbName,
+                DATABASE_URL: 'na',
+                PRISMA_QUERY_ENGINE_LIBRARY: PRISMA_QUERY_ENGINE_BINARY_PATH
+            }
+        });
+
+        getAllUsers.applyRemovalPolicy(RemovalPolicy.DESTROY);
+
+        cluster.grantDataApiAccess(getAllUsers);
+        cluster.secret?.grantRead(getAllUsers);
+    }
+
+    createUpdateGetTransactionLambda = (cluster: DatabaseCluster, dbName: string, prismaBinaryLayer: LayerVersion) => {
+        const createUpdateGet = new NodejsFunction(this, this.envName + 'CreateUpdateGetTransactionLambda', {
+            description: 'Create a user, Update a user and get a user, inside a transaction, using the Prisma Aurora Adapter',
+            entry: path.join(__dirname, 'handlers', 'create-update-get-transaction.ts'),
+            handler: 'createUpdateGet',
+            timeout: Duration.seconds(10),
+            bundling: {
+                minify: false
+            },
+            runtime: Runtime.NODEJS_20_X,
+            projectRoot: ROOT_OF_PROJECT,
+            architecture: Architecture.X86_64,
+            depsLockFilePath: path.join(ROOT_OF_PROJECT, 'package-lock.json'),
+            layers: [prismaBinaryLayer],
+            environment: {
+                DEBUG: "prisma*",
+                RESOURCE_ARN: cluster.clusterArn,
+                SECRET_ARN: cluster.secret!.secretArn,
+                DATABASE_NAME: dbName,
+                DATABASE_URL: 'na',
+                PRISMA_QUERY_ENGINE_LIBRARY: PRISMA_QUERY_ENGINE_BINARY_PATH
+            }
+        });
+
+        createUpdateGet.applyRemovalPolicy(RemovalPolicy.DESTROY);
+
+        cluster.grantDataApiAccess(createUpdateGet);
+        cluster.secret?.grantRead(createUpdateGet);
     }
 
     createPrismaBinaryLayer = () => {
