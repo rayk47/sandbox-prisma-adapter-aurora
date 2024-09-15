@@ -139,5 +139,7 @@ node_modules
 *cdk.context.json
 cdk.out
 dist
-.env
-src/lib/handlers/prisma/client
+*.env
+!*.env.sample
+src/lib/services/database/client
+tmp

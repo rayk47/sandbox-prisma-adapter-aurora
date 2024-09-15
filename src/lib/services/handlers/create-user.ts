@@ -1,6 +1,6 @@
 import { RDSDataClient } from '@aws-sdk/client-rds-data';
 import { PrismaAurora } from '@raymondjkelly/prisma-adapter-aurora';
-import { PrismaClient } from './prisma/client';
+import { PrismaClient } from '../database/client';
 import { randomUUID } from 'crypto';
 
 // Setup
@@ -15,35 +15,21 @@ const adapter = new PrismaAurora(client, { resourceArn, secretArn, databaseName 
 const prisma = new PrismaClient({ adapter });
 
 /**
- * Create User, Update User and Get User all as part of a transaction
+ * Create User
  */
-export const createUpdateGet = async () => {
+export const createUser = async () => {
     try {
-        const finalStateOfUser = await prisma.$transaction(async (tx) => {
-
-            const id = `${randomUUID()}`;
-            const newUser = await tx.user.create({
-                data: {
-                    name: `${id}`,
-                    email: `${id}@test.com`
-                }
-            });
-
-            await tx.user.update({
-                where: {
-                    email: newUser.email
-                },
-                data: {
-                    name: newUser.name + '- Updated'
-                }
-            });
-
-            const finalUser = await tx.user.findUniqueOrThrow({
-                where: {
-                    email: newUser.email
-                }
-            });
-            return finalUser;
+        const id = `${randomUUID()}`;
+        const newUser = await prisma.user.create({
+            data: {
+                name: `${id}`,
+                email: `${id}@test.com`
+            }
+        });
+        const finalStateOfUser = await prisma.user.findUniqueOrThrow({
+            where: {
+                email: newUser.email
+            }
         })
 
         return { statusCode: 200, body: JSON.stringify(finalStateOfUser) };

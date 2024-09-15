@@ -15,11 +15,11 @@
   "scripts": {
     "build": "npm run build-prisma-client && tsc",
     "lint": "eslint",
-    "build-prisma-client": "prisma generate --schema=./src/lib/handlers/prisma/schema.prisma",
-    "build-prisma-migrations": "prisma migrate dev --schema=./src/lib/handlers/prisma/schema.prisma",
+    "build-prisma-client": "prisma generate --schema=./src/lib/services/database/schema.prisma",
+    "build-prisma-migrations": "ts-node ./utils/build-migrations",
     "deploy": "npm run build && cdk deploy --all --require-approval never",
     "deploy-lambdas": "npm run build && cdk deploy PrismaDataAPIlambdas --force",
-    "destroy": "cdk destroy prisma-rds-data-api* --force",
+    "destroy": "cdk destroy --force --all",
     "bootstrap": "cdk bootstrap"
   },
   "bin": {
@@ -43,6 +43,7 @@
     "eslint": "^9.10.0",
     "globals": "^15.9.0",
     "prisma": "^5.19.1",
+    "ts-node": "^10.9.2",
     "typescript": "~5.4.5",
     "typescript-eslint": "^8.5.0"
   }

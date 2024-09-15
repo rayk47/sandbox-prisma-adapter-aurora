@@ -11,10 +11,9 @@ config({ path: path.join(__dirname, '../', '.env') });
 const ENV_NAME = env['ENV_NAME']!;
 const AWS_ACCOUNT = env['AWS_ACCOUNT']!;
 const AWS_REGION = env['AWS_REGION']!;
+const DB_NAME = env['DB_NAME']!.toLowerCase();
 
 const app = new cdk.App();
-
-const DB_NAME = 'PrismaRdsDataApi';
 
 const auroraCluster = new Aurora(app, ENV_NAME + 'AuroraStack', {
   env: { account: AWS_ACCOUNT, region: AWS_REGION },

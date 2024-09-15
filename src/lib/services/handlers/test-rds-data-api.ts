@@ -5,10 +5,10 @@ import { env } from 'process';
 const client = new RDSDataClient({ region: env['AWS_REGION'] });
 
 /**
- * Test setting up a basic database table
+ * Test RDS Data API Directly
  * @returns
  */
-export const setupDatabase = async () => {
+export const testRDSDataAPI = async () => {
     const clusterArn = env['CLUSTER_ARN']!;
     const secretArn = env['SECRET_ARN']!;
     const dbName = env['DATABASE_NAME']!;
@@ -20,6 +20,7 @@ export const setupDatabase = async () => {
     const selectAll = "SELECT \"User\".\"email\", \"User\".\"name\" FROM \"User\" WHERE 1=1";
 
     try {
+
         const transactionId = await beginTransaction({
             clusterArn,
             secretArn,
@@ -102,8 +103,8 @@ const beginTransaction = async (params: {
 const performQueryInExistingTransaction = async (params: {
     clusterArn: string,
     secretArn: string,
-    dbName: string,
-    transactionId: string,
+    dbName?: string,
+    transactionId?: string,
     sql: string,
     parameters?: SqlParameter[]
 }) => {

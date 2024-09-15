@@ -1,7 +1,6 @@
 import { RDSDataClient } from '@aws-sdk/client-rds-data';
 import { PrismaAurora } from '@raymondjkelly/prisma-adapter-aurora';
-import { PrismaClient } from './prisma/client';
-import { randomUUID } from 'crypto';
+import { PrismaClient } from '../database/client';
 
 // Setup
 const awsRegion = `${process.env['AWS_REGION']}` //The region that the aurora cluster is deployed to
@@ -15,24 +14,13 @@ const adapter = new PrismaAurora(client, { resourceArn, secretArn, databaseName 
 const prisma = new PrismaClient({ adapter });
 
 /**
- * Create User
+ * Get All Users
  */
-export const createUser = async () => {
+export const getAllUsers = async () => {
     try {
-        const id = `${randomUUID()}`;
-        const newUser = await prisma.user.create({
-            data: {
-                name: `${id}`,
-                email: `${id}@test.com`
-            }
-        });
-        const finalStateOfUser = await prisma.user.findUniqueOrThrow({
-            where: {
-                email: newUser.email
-            }
-        })
+        const allUsers = await prisma.user.findMany();
 
-        return { statusCode: 200, body: JSON.stringify(finalStateOfUser) };
+        return { statusCode: 200, body: JSON.stringify(allUsers) };
     } catch (error: unknown) {
         return { statusCode: 400, body: JSON.stringify(error) };
 

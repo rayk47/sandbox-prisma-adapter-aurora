@@ -1,6 +1,7 @@
 import { RDSDataClient } from '@aws-sdk/client-rds-data';
 import { PrismaAurora } from '@raymondjkelly/prisma-adapter-aurora';
-import { PrismaClient } from './prisma/client';
+import { PrismaClient } from '../database/client';
+import { randomUUID } from 'crypto';
 
 // Setup
 const awsRegion = `${process.env['AWS_REGION']}` //The region that the aurora cluster is deployed to
@@ -14,13 +15,38 @@ const adapter = new PrismaAurora(client, { resourceArn, secretArn, databaseName 
 const prisma = new PrismaClient({ adapter });
 
 /**
- * Get All Users
+ * Create User, Update User and Get User all as part of a transaction
  */
-export const getAllUsers = async () => {
+export const createUpdateGet = async () => {
     try {
-        const allUsers = await prisma.user.findMany();
+        const finalStateOfUser = await prisma.$transaction(async (tx) => {
 
-        return { statusCode: 200, body: JSON.stringify(allUsers) };
+            const id = `${randomUUID()}`;
+            const newUser = await tx.user.create({
+                data: {
+                    name: `${id}`,
+                    email: `${id}@test.com`
+                }
+            });
+
+            await tx.user.update({
+                where: {
+                    email: newUser.email
+                },
+                data: {
+                    name: newUser.name + '- Updated'
+                }
+            });
+
+            const finalUser = await tx.user.findUniqueOrThrow({
+                where: {
+                    email: newUser.email
+                }
+            });
+            return finalUser;
+        })
+
+        return { statusCode: 200, body: JSON.stringify(finalStateOfUser) };
     } catch (error: unknown) {
         return { statusCode: 400, body: JSON.stringify(error) };
 

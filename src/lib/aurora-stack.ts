@@ -64,6 +64,7 @@ export class Aurora extends Stack {
       // iamAuthentication: true,
     });
 
+    this.auroraCluster.applyRemovalPolicy(RemovalPolicy.DESTROY);
     this.cfnOutputConfig();
   }
 

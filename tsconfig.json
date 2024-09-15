@@ -18,7 +18,7 @@
     ]
   },
   "exclude": [
-    "src/lib/handlers/prisma",
+    "src/lib/services/database",
     "cdk.out"
   ]
 }
