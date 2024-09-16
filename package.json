@@ -13,10 +13,10 @@
   },
   "homepage": "https://github.com/rayk47/sandbox-prisma-adapter-aurora#readme",
   "scripts": {
-    "build": "npm run build-prisma-client && tsc",
+    "build": "npm run build-client && tsc",
     "lint": "eslint",
-    "build-prisma-client": "prisma generate --schema=./src/lib/services/database/schema.prisma",
-    "build-prisma-migrations": "ts-node ./utils/build-migrations",
+    "build-client": "prisma generate --schema=./src/lib/services/database/schema.prisma",
+    "build-migrations": "ts-node ./utils/build-migrations",
     "deploy": "npm run build && cdk deploy --all --require-approval never",
     "deploy-lambdas": "npm run build && cdk deploy PrismaDataAPIlambdas --force",
     "destroy": "cdk destroy --force --all",
@@ -28,7 +28,7 @@
   "dependencies": {
     "@aws-sdk/client-rds-data": "^3.600.0",
     "@prisma/client": "^5.19.1",
-    "@raymondjkelly/prisma-adapter-aurora": "^0.0.9",
+    "@raymondjkelly/prisma-adapter-aurora": "^0.0.13",
     "aws-cdk-lib": "2.147.0",
     "constructs": "^10.0.0",
     "dotenv": "^16.4.5",
