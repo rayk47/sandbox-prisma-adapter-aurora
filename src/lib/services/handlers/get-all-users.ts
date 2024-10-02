@@ -20,7 +20,12 @@ export const getAllUsers = async () => {
     try {
         const allUsers = await prisma.user.findMany();
 
-        return { statusCode: 200, body: JSON.stringify(allUsers) };
+        return {
+            statusCode: 200, body: JSON.stringify(
+                allUsers,
+                (key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+            )
+        };
     } catch (error: unknown) {
         return { statusCode: 400, body: JSON.stringify(error) };
 

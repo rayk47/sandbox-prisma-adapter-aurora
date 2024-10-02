@@ -30,7 +30,7 @@ export const resetDatabase = async () => {
         /**
          * Using a transaction, iterate through the migrations and create the schema for the new database
          */
-        const response = prisma.$transaction(async (tx) => {
+        const response = await prisma.$transaction(async (tx) => {
             let migrations: string[] = [];
             readdirSync(join('.', 'migrations')).forEach(file => {
                 if (file !== "migration_lock.toml") {
@@ -45,7 +45,8 @@ export const resetDatabase = async () => {
             }
             return { statusCode: 200 };
         });
-        return response;
+        const schema = await prisma.$executeRawUnsafe(`select column_name, data_type, character_maximum_length from INFORMATION_SCHEMA.COLUMNS where table_name ='public.User';`)
+        return { ...response, body: JSON.stringify(schema) };
     } catch (error: unknown) {
         return { statusCode: 400, body: JSON.stringify(error) };
     }

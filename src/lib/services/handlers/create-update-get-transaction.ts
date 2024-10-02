@@ -25,7 +25,8 @@ export const createUpdateGet = async () => {
             const newUser = await tx.user.create({
                 data: {
                     name: `${id}`,
-                    email: `${id}@test.com`
+                    email: `${id}@test.com`,
+                    role: 'ADMIN',
                 }
             });
 
@@ -46,7 +47,12 @@ export const createUpdateGet = async () => {
             return finalUser;
         })
 
-        return { statusCode: 200, body: JSON.stringify(finalStateOfUser) };
+        return {
+            statusCode: 200, body: JSON.stringify(
+                finalStateOfUser,
+                (key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+            )
+        };
     } catch (error: unknown) {
         return { statusCode: 400, body: JSON.stringify(error) };
 

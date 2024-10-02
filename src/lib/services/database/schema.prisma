@@ -11,6 +11,30 @@ datasource db {
 }
 
 model User {
-    name  String
-    email String @unique
+    //Working
+    email         String   @unique
+    name          String?
+    isDeleted     Boolean?
+    intValue      Int?
+    floatNumber   Float?
+    decimalNumber Decimal?
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+    jsonBlob      Json?
+    id            Int      @id @default(autoincrement())
+    ccuid         String   @default(cuid())
+    uuid          String   @default(uuid())
+    genRandomUuid String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    role          Role
+    bigIntValue   BigInt?
+    bytes         Bytes?
+
+    //In Progress
+
+    //TODO
+}
+
+enum Role {
+    USER
+    ADMIN
 }

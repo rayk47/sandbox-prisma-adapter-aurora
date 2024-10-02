@@ -1,6 +1,6 @@
 import { RDSDataClient } from '@aws-sdk/client-rds-data';
 import { PrismaAurora } from '@raymondjkelly/prisma-adapter-aurora';
-import { PrismaClient } from '../database/client';
+import { Prisma, PrismaClient } from '../database/client';
 import { randomUUID } from 'crypto';
 
 // Setup
@@ -22,17 +22,27 @@ export const createUser = async () => {
         const id = `${randomUUID()}`;
         const newUser = await prisma.user.create({
             data: {
-                name: `${id}`,
-                email: `${id}@test.com`
+                name: `${id}-name`,
+                email: `${id}@test.com`,
+                intValue: 200,
+                isDeleted: true,
+                floatNumber: 10.46,
+                decimalNumber: new Prisma.Decimal(24.454545),
+                jsonBlob: {
+                    test: "Does this work?"
+                },
+                role: 'USER',
+                bigIntValue: BigInt(534543543534),
+                bytes: Buffer.from('Hello, World!', 'utf-8')
             }
         });
-        const finalStateOfUser = await prisma.user.findUniqueOrThrow({
-            where: {
-                email: newUser.email
-            }
-        })
 
-        return { statusCode: 200, body: JSON.stringify(finalStateOfUser) };
+        return {
+            statusCode: 200, body: JSON.stringify(
+                newUser,
+                (key, value) => (typeof value === 'bigint' ? value.toString() : value) // return everything else unchanged
+            )
+        };
     } catch (error: unknown) {
         return { statusCode: 400, body: JSON.stringify(error) };
 
